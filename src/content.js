@@ -188,6 +188,13 @@
       if (subtitle) return { el: subtitle, kind: "append" };
     }
 
+    const column = title.parentElement;
+    const cell = column && column !== row ? column.parentElement : null;
+
+    if (cell && cell !== row && row.contains(cell)) {
+      return { el: cell, kind: "append" };
+    }
+
     return { el: title, kind: "after" };
   }
 

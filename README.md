@@ -153,7 +153,7 @@ __spotifyPlaysDebug.extract(text); // сколько треков с playcount �
 manifest.json        MV3-манифест: два content script (MAIN и ISOLATED)
 src/inject.js        перехват fetch/XHR, разбор JSON, postMessage
 src/content.js       кэш, поиск строк, вставка числа, настройки, статистика
-src/content.css      стили бейджа (три варианта размещения)
+src/content.css      стили бейджа (два варианта размещения)
 src/popup.html|css|js  попап с настройками и диагностикой
 ```
 

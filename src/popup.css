@@ -18,7 +18,11 @@ body {
   padding: 14px 14px 12px;
   background: var(--bg);
   color: var(--text);
-  font: 13px/1.45 "Segoe UI", system-ui, -apple-system, sans-serif;
+  font:
+    13px/1.45 "Segoe UI",
+    system-ui,
+    -apple-system,
+    sans-serif;
 }
 
 body.is-off .group,

@@ -11,15 +11,15 @@
  * missing — a row without a recognised structure is simply skipped.
  */
 (() => {
-  'use strict';
+  "use strict";
 
   /* ------------------------------------------------------------------ */
   /* Constants                                                           */
   /* ------------------------------------------------------------------ */
 
-  const MSG_SOURCE = 'slc-playcounts';
-  const CACHE_KEY = 'slc:cache:v1';
-  const SETTINGS_KEY = 'slc:settings:v1';
+  const MSG_SOURCE = "slc-playcounts";
+  const CACHE_KEY = "slc:cache:v1";
+  const SETTINGS_KEY = "slc:settings:v1";
 
   const ID_RE = /^[0-9A-Za-z]{22}$/;
   const TRACK_HREF_RE = /\/track\/([0-9A-Za-z]{22})(?:[/?#]|$)/;
@@ -36,7 +36,7 @@
 
   const DEFAULTS = {
     enabled: true,
-    placement: 'cell', // 'cell' | 'subtitle' | 'after-title'
+    placement: "cell", // 'cell' | 'subtitle' | 'after-title'
     compact: false,
     allPages: false,
   };
@@ -58,14 +58,18 @@
   let compactFormatter = null;
 
   try {
-    debugOn = window.localStorage.getItem('slc:debug') === '1';
+    debugOn = window.localStorage.getItem("slc:debug") === "1";
   } catch (_) {
     debugOn = false;
   }
 
   const log = (...args) => {
     if (debugOn) {
-      console.log('%c[SpotifyPlays]', 'color:#1db954;font-weight:bold', ...args);
+      console.log(
+        "%c[SpotifyPlays]",
+        "color:#1db954;font-weight:bold",
+        ...args,
+      );
     }
   };
 
@@ -76,7 +80,7 @@
   function getFullFormatter() {
     if (!fullFormatter) {
       try {
-        fullFormatter = new Intl.NumberFormat('ru-RU');
+        fullFormatter = new Intl.NumberFormat("ru-RU");
       } catch (_) {
         fullFormatter = null;
       }
@@ -87,8 +91,8 @@
   function getCompactFormatter() {
     if (!compactFormatter) {
       try {
-        compactFormatter = new Intl.NumberFormat('ru-RU', {
-          notation: 'compact',
+        compactFormatter = new Intl.NumberFormat("ru-RU", {
+          notation: "compact",
           maximumFractionDigits: 1,
         });
       } catch (_) {
@@ -125,9 +129,12 @@
 
   function currentPath() {
     try {
-      return String(window.location.pathname || '').replace(LOCALE_PREFIX_RE, '');
+      return String(window.location.pathname || "").replace(
+        LOCALE_PREFIX_RE,
+        "",
+      );
     } catch (_) {
-      return '';
+      return "";
     }
   }
 
@@ -146,7 +153,7 @@
   function trackIdFromRow(row) {
     const link = titleLink(row);
     if (!link) return null;
-    const href = link.getAttribute('href') || '';
+    const href = link.getAttribute("href") || "";
     const match = TRACK_HREF_RE.exec(href);
     return match ? match[1] : null;
   }
@@ -156,7 +163,9 @@
    * rows use it for "Artist • 1 234 567", which looks native.
    */
   function subtitleLine(row, title) {
-    const links = row.querySelectorAll('a[href*="/artist/"],a[href*="/show/"],a[href*="/user/"]');
+    const links = row.querySelectorAll(
+      'a[href*="/artist/"],a[href*="/show/"],a[href*="/user/"]',
+    );
     for (let i = 0; i < links.length; i += 1) {
       const link = links[i];
       if (link === title) continue;
@@ -176,9 +185,9 @@
     const title = titleLink(row);
     if (!title) return null;
 
-    if (mode === 'subtitle') {
+    if (mode === "subtitle") {
       const subtitle = subtitleLine(row, title);
-      if (subtitle) return { el: subtitle, kind: 'append' };
+      if (subtitle) return { el: subtitle, kind: "append" };
     }
 
     // The title usually lives in a text column, which itself sits in the
@@ -187,36 +196,36 @@
     const column = title.parentElement;
     const cell = column && column !== row ? column.parentElement : null;
 
-    if (mode !== 'after-title' && cell && cell !== row && row.contains(cell)) {
-      return { el: cell, kind: 'append' };
+    if (mode !== "after-title" && cell && cell !== row && row.contains(cell)) {
+      return { el: cell, kind: "append" };
     }
 
-    return { el: title, kind: 'after' };
+    return { el: title, kind: "after" };
   }
 
   function createBadge() {
-    const badge = document.createElement('span');
-    badge.className = 'slc-badge';
+    const badge = document.createElement("span");
+    badge.className = "slc-badge";
     return badge;
   }
 
   function decorateBadge(badge, count) {
-    badge.className = 'slc-badge slc-badge--' + settings.placement;
+    badge.className = "slc-badge slc-badge--" + settings.placement;
     badge.textContent = formatShort(count);
-    badge.title = 'Всего прослушиваний: ' + formatFull(count);
-    badge.setAttribute('data-slc-count', String(count));
+    badge.title = "Всего прослушиваний: " + formatFull(count);
+    badge.setAttribute("data-slc-count", String(count));
   }
 
   function placeBadge(badge, anchor) {
-    if (anchor.kind === 'append') {
+    if (anchor.kind === "append") {
       anchor.el.appendChild(badge);
     } else {
-      anchor.el.insertAdjacentElement('afterend', badge);
+      anchor.el.insertAdjacentElement("afterend", badge);
     }
   }
 
   function clearRow(row) {
-    const badges = row.querySelectorAll('.slc-badge');
+    const badges = row.querySelectorAll(".slc-badge");
     for (let i = 0; i < badges.length; i += 1) badges[i].remove();
     if (row.dataset) {
       delete row.dataset.slcSig;
@@ -225,7 +234,7 @@
   }
 
   function removeAllBadges() {
-    const badges = document.querySelectorAll('.slc-badge');
+    const badges = document.querySelectorAll(".slc-badge");
     for (let i = 0; i < badges.length; i += 1) badges[i].remove();
   }
 
@@ -235,15 +244,28 @@
 
   function applyToRow(row, id) {
     const count = cache.get(id);
-    if (typeof count !== 'number') {
-      if (row.dataset && row.dataset.slcId && row.dataset.slcId !== id) clearRow(row);
+    if (typeof count !== "number") {
+      if (row.dataset && row.dataset.slcId && row.dataset.slcId !== id)
+        clearRow(row);
       return false;
     }
 
-    const signature = id + '|' + count + '|' + settings.placement + '|' + (settings.compact ? '1' : '0');
-    let badge = row.querySelector('.slc-badge');
+    const signature =
+      id +
+      "|" +
+      count +
+      "|" +
+      settings.placement +
+      "|" +
+      (settings.compact ? "1" : "0");
+    let badge = row.querySelector(".slc-badge");
 
-    if (badge && badge.isConnected && row.dataset && row.dataset.slcSig === signature) {
+    if (
+      badge &&
+      badge.isConnected &&
+      row.dataset &&
+      row.dataset.slcSig === signature
+    ) {
       return true;
     }
 
@@ -309,7 +331,18 @@
     }
 
     lastStats = { rows: rows.length, withId, matched, shown };
-    log('rows', rows.length, '| tracks', withId, '| with number', matched, '| badges', shown, '| cache', cache.size);
+    log(
+      "rows",
+      rows.length,
+      "| tracks",
+      withId,
+      "| with number",
+      matched,
+      "| badges",
+      shown,
+      "| cache",
+      cache.size,
+    );
   }
 
   function scheduleRender() {
@@ -360,22 +393,24 @@
       scheduleRender();
       return;
     }
-    request.then((stored) => {
-      const plain = stored && stored[CACHE_KEY];
-      if (plain && typeof plain === 'object') {
-        for (const id in plain) {
-          if (!ID_RE.test(id)) continue;
-          const value = plain[id];
-          if (typeof value === 'number' && value >= 0) cache.set(id, value);
+    request
+      .then((stored) => {
+        const plain = stored && stored[CACHE_KEY];
+        if (plain && typeof plain === "object") {
+          for (const id in plain) {
+            if (!ID_RE.test(id)) continue;
+            const value = plain[id];
+            if (typeof value === "number" && value >= 0) cache.set(id, value);
+          }
         }
-      }
-      cacheLoaded = true;
-      log('loaded', cache.size, 'cached play counts');
-      scheduleRender();
-    }).catch(() => {
-      cacheLoaded = true;
-      scheduleRender();
-    });
+        cacheLoaded = true;
+        log("loaded", cache.size, "cached play counts");
+        scheduleRender();
+      })
+      .catch(() => {
+        cacheLoaded = true;
+        scheduleRender();
+      });
   }
 
   function loadSettings() {
@@ -386,15 +421,17 @@
       scheduleRender();
       return;
     }
-    request.then((stored) => {
-      const value = stored && stored[SETTINGS_KEY];
-      if (value && typeof value === 'object') {
-        settings = Object.assign({}, DEFAULTS, value);
-      }
-      scheduleRender();
-    }).catch(() => {
-      scheduleRender();
-    });
+    request
+      .then((stored) => {
+        const value = stored && stored[SETTINGS_KEY];
+        if (value && typeof value === "object") {
+          settings = Object.assign({}, DEFAULTS, value);
+        }
+        scheduleRender();
+      })
+      .catch(() => {
+        scheduleRender();
+      });
   }
 
   /* ------------------------------------------------------------------ */
@@ -402,12 +439,13 @@
   /* ------------------------------------------------------------------ */
 
   function absorb(data) {
-    if (!data || typeof data !== 'object') return 0;
+    if (!data || typeof data !== "object") return 0;
     let added = 0;
     for (const id in data) {
       if (!ID_RE.test(id)) continue;
       const value = data[id];
-      if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) continue;
+      if (typeof value !== "number" || !Number.isFinite(value) || value < 0)
+        continue;
       if (cache.get(id) !== value) {
         if (cache.size >= MAX_CACHE) break;
         cache.set(id, value);
@@ -417,7 +455,7 @@
     return added;
   }
 
-  window.addEventListener('message', (event) => {
+  window.addEventListener("message", (event) => {
     if (event.source !== window) return;
     const payload = event.data;
     if (!payload || payload.source !== MSG_SOURCE) return;
@@ -428,7 +466,7 @@
     cacheDirty = true;
     schedulePersist();
     scheduleRender();
-    if (debugOn) log('received', added, 'counts, cache size', cache.size);
+    if (debugOn) log("received", added, "counts, cache size", cache.size);
   });
 
   /* ------------------------------------------------------------------ */
@@ -440,7 +478,7 @@
       node &&
       node.nodeType === 1 &&
       node.classList &&
-      node.classList.contains('slc-badge')
+      node.classList.contains("slc-badge")
     );
   }
 
@@ -453,10 +491,15 @@
     for (let i = 0; i < records.length; i += 1) {
       const record = records[i];
       const target = record.target;
-      if (target && target.nodeType === 1 && target.closest && target.closest('.slc-badge')) {
+      if (
+        target &&
+        target.nodeType === 1 &&
+        target.closest &&
+        target.closest(".slc-badge")
+      ) {
         continue;
       }
-      if (record.type === 'childList') {
+      if (record.type === "childList") {
         if (record.removedNodes.length > 0) return false;
         let ours = true;
         const added = record.addedNodes;
@@ -504,12 +547,12 @@
 
   try {
     chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-      if (!message || typeof message !== 'object') return undefined;
-      if (message.type === 'slc:stats') {
+      if (!message || typeof message !== "object") return undefined;
+      if (message.type === "slc:stats") {
         sendResponse(buildStats());
         return undefined;
       }
-      if (message.type === 'slc:rescan') {
+      if (message.type === "slc:rescan") {
         render();
         sendResponse(buildStats());
         return undefined;
@@ -522,9 +565,12 @@
 
   try {
     chrome.storage.onChanged.addListener((changes, area) => {
-      if (area !== 'sync' || !changes[SETTINGS_KEY]) return;
+      if (area !== "sync" || !changes[SETTINGS_KEY]) return;
       const value = changes[SETTINGS_KEY].newValue;
-      settings = value && typeof value === 'object' ? Object.assign({}, DEFAULTS, value) : Object.assign({}, DEFAULTS);
+      settings =
+        value && typeof value === "object"
+          ? Object.assign({}, DEFAULTS, value)
+          : Object.assign({}, DEFAULTS);
       scheduleRender();
     });
   } catch (_) {
@@ -540,7 +586,7 @@
     loadSettings();
     loadCache();
     scheduleRender();
-    log('content script ready');
+    log("content script ready");
   }
 
   if (document.documentElement) {

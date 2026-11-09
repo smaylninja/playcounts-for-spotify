@@ -25,7 +25,9 @@
   vertical-align: middle;
   user-select: none;
   -webkit-user-select: none;
-  transition: background-color 120ms ease, color 120ms ease;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease;
 }
 
 .slc-badge:hover {

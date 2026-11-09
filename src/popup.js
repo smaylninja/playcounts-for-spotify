@@ -199,12 +199,20 @@ function bind() {
   });
 }
 
-async function start() {
+function paintVersion() {
   try {
-    ui.version.textContent = "v" + chrome.runtime.getManifest().version;
+    const manifest = chrome.runtime.getManifest();
+    const version = manifest && (manifest.version_name || manifest.version);
+    ui.version.textContent = version ? "v" + version : "";
+    ui.version.hidden = !version;
   } catch (_) {
     ui.version.textContent = "";
+    ui.version.hidden = true;
   }
+}
+
+async function start() {
+  paintVersion();
 
   try {
     const stored = await chrome.storage.sync.get(SETTINGS_KEY);

@@ -38,7 +38,7 @@
 /* In the artists line we blend in completely: same size, same colour. */
 .slc-badge--subtitle {
   margin-left: 2px;
-  margin-bottom: 2px;
+  margin-bottom: 3px;
   padding: 0;
   min-height: 0;
   background: none;

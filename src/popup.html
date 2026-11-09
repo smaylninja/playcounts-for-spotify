@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <title>Spotify Play Counts</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header class="header">
+      <svg class="logo" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="11" fill="#1db954" />
+        <path d="M9 7.6 17 12l-8 4.4V7.6Z" fill="#121212" />
+      </svg>
+      <div class="titles">
+        <h1>Spotify Play Counts</h1>
+        <p class="version" id="version">v1.0.0</p>
+      </div>
+    </header>
+
+    <label class="row row--switch">
+      <span class="row__label">Показывать прослушивания</span>
+      <input type="checkbox" id="enabled" class="switch" />
+    </label>
+
+    <section class="group">
+      <h2 class="group__title">Где разместить число</h2>
+      <label class="row row--radio">
+        <input type="radio" name="placement" value="cell" />
+        <span>Справа от названия трека</span>
+      </label>
+      <label class="row row--radio">
+        <input type="radio" name="placement" value="subtitle" />
+        <span>В строке с исполнителями</span>
+      </label>
+      <label class="row row--radio">
+        <input type="radio" name="placement" value="after-title" />
+        <span>Сразу после названия</span>
+      </label>
+    </section>
+
+    <label class="row row--check">
+      <input type="checkbox" id="compact" />
+      <span>Компактные числа (1,2 млн)</span>
+    </label>
+
+    <label class="row row--check">
+      <input type="checkbox" id="allPages" />
+      <span>И на других страницах Spotify</span>
+    </label>
+
+    <section class="stats" id="stats">
+      <p class="stats__line">Проверяю страницу…</p>
+    </section>
+
+    <p class="hint" id="hint"></p>
+
+    <footer class="footer">
+      Числа берутся из ответов самого Spotify и хранятся только на этом
+      компьютере.
+    </footer>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

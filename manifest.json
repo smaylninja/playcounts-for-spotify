@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Spotify Play Counts",
+  "version": "1.0.0",
+  "description": "Показывает число прослушиваний каждого трека в плейлистах и альбомах веб-плеера Spotify.",
+  "minimum_chrome_version": "111",
+  "permissions": ["storage"],
+  "host_permissions": ["https://open.spotify.com/*"],
+  "action": {
+    "default_title": "Spotify Play Counts",
+    "default_popup": "src/popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://open.spotify.com/*"],
+      "js": ["src/inject.js"],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": false
+    },
+    {
+      "matches": ["https://open.spotify.com/*"],
+      "js": ["src/content.js"],
+      "css": ["src/content.css"],
+      "run_at": "document_start",
+      "all_frames": false
+    }
+  ]
+}

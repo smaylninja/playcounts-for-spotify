@@ -1,0 +1,62 @@
+/* Spotify Play Counts — badge styles.
+ * Kept intentionally small: everything inherits from Spotify's own typography
+ * so the number does not look like a foreign element.
+ */
+
+.slc-badge {
+  display: inline-flex;
+  align-items: center;
+  align-self: center;
+  flex: 0 0 auto;
+  max-width: 100%;
+  margin: 0 0 0 8px;
+  padding: 0 6px;
+  min-height: 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #c8c8c8;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.slc-badge:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+
+/* In the artists line we blend in completely: same size, same colour. */
+.slc-badge--subtitle {
+  margin-left: 2px;
+  padding: 0;
+  min-height: 0;
+  background: none;
+  color: inherit;
+  font-size: inherit;
+  font-weight: 400;
+  line-height: inherit;
+}
+
+.slc-badge--subtitle::before {
+  content: "•";
+  margin: 0 4px;
+  opacity: 0.7;
+}
+
+.slc-badge--subtitle:hover {
+  background: none;
+  color: #ffffff;
+}
+
+/* Directly after the track title. */
+.slc-badge--after-title {
+  margin-left: 8px;
+}

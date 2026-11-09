@@ -144,6 +144,11 @@ body.is-off .hint {
   background: var(--bg-soft);
 }
 
+/* Расширение выключено — блока со статистикой нет вовсе: ни рамки, ни отступа. */
+.stats[hidden] {
+  display: none;
+}
+
 .stats__line {
   display: flex;
   justify-content: space-between;

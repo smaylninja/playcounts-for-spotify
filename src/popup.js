@@ -104,13 +104,24 @@ function message(text) {
 }
 
 function renderIdle(text) {
+  ui.stats.hidden = false;
   ui.stats.textContent = "";
   ui.stats.appendChild(message(text));
   ui.hint.textContent = "";
 }
 
+/* Выключенное расширение не показывает ни статистику, ни сообщение об
+   отсутствии связи: попап не должен тяжелеть ради блока, которому нечего
+   сообщить. */
+function renderHidden() {
+  ui.stats.textContent = "";
+  ui.stats.hidden = true;
+  ui.hint.textContent = "";
+}
+
 function renderStats(stats) {
   const matched = typeof stats.matched === "number" ? stats.matched : 0;
+  ui.stats.hidden = false;
   ui.stats.textContent = "";
   ui.stats.appendChild(line("Треков в кэше", number(stats.cached)));
   ui.stats.appendChild(line("Строк с треками", number(stats.withId)));
@@ -123,10 +134,6 @@ function renderStats(stats) {
     ),
   );
 
-  if (!stats.enabled) {
-    ui.hint.textContent = "Расширение выключено — включите переключатель выше.";
-    return;
-  }
   if (stats.withId === 0) {
     ui.hint.textContent =
       "На странице пока нет строк с треками. Откройте альбом или плейлист.";
@@ -174,6 +181,10 @@ function queryStats() {
 }
 
 async function poll() {
+  if (!settings.enabled) {
+    renderHidden();
+    return;
+  }
   const stats = await queryStats();
   if (!stats) {
     renderIdle(

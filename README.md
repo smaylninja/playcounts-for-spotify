@@ -155,15 +155,40 @@ src/inject.js        перехват fetch/XHR, разбор JSON, postMessage
 src/content.js       кэш, поиск строк, вставка числа, настройки, статистика
 src/content.css      стили бейджа (два варианта размещения)
 src/popup.html|css|js  попап с настройками и диагностикой
+icons/icon.svg       мастер-иконка 128×128 (исходник дизайна)
+icons/icon-small.svg упрощённый вариант под 16–32 px
+icons/icon*.png      готовые PNG, прописаны в манифесте
+tools/make-icons.ps1 рендер PNG из геометрии SVG (System.Drawing)
 ```
 
-Иконок в манифесте нет намеренно: Chrome покажет стандартную. Если хотите свою,
-положите `icons/icon16.png`, `icons/icon48.png`, `icons/icon128.png` и добавьте в
-`manifest.json`:
+## Иконки
 
-```json
-"icons": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" }
+`icons/icon.svg` — мастер 128×128: тёмный скруглённый квадрат, зелёный
+play-треугольник и три растущих столбика (намёк на «счётчики»). В
+`icons/icon-small.svg` остаётся только треугольник, крупнее: на 16 px три
+столбика шириной 1.25 px превращаются в кашу, а силуэт треугольника читается.
+
+Chrome не принимает SVG в `icons` и `action.default_icon` — в отличие от
+Firefox, где SVG работает напрямую. Поэтому SVG здесь исходник дизайна, а в
+манифест прописаны PNG, отрендеренные из их геометрии:
+
 ```
+icons/icon16.png    16×16   только треугольник
+icons/icon32.png    32×32   только треугольник
+icons/icon48.png    48×48   треугольник + столбики
+icons/icon128.png   128×128 треугольник + столбики
+```
+
+Пересобрать после правок в SVG:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\make-icons.ps1
+```
+
+Скрипт использует только `System.Drawing` (входит в Windows), рисует в тех же
+координатах 128×128 с четырёхкратным суперсэмплингом и даунскейлом
+`HighQualityBicubic`, поэтому 16 px не «мылится». PNG пишутся в `icons/`
+поверх старых, манифест менять не нужно.
 
 ## Идеи для развития
 

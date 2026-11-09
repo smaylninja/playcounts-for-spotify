@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" role="img" aria-label="Play Counts for Spotify">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1e1e1e"/>
+      <stop offset="1" stop-color="#080808"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 16 px: столбики превращаются в кашу, поэтому остаётся только треугольник,
+       увеличенный до 4.5…12 по x и 3.5…12.5 по y -->
+  <rect width="16" height="16" rx="3.5" fill="url(#bg)"/>
+  <path d="M4.5 3.5 L12 8 L4.5 12.5 Z" fill="#1db954"/>
+</svg>

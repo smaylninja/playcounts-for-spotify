@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Play Counts for Spotify">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1e1e1e"/>
+      <stop offset="1" stop-color="#080808"/>
+    </linearGradient>
+  </defs>
+
+  <!-- фон: скруглённый квадрат, r = 28 (на 16 px это 3.5) -->
+  <rect width="128" height="128" rx="28" fill="url(#bg)"/>
+
+  <!-- глиф: три растущих столбика, общий низ на y = 89 -->
+  <g fill="#1db954">
+    <rect x="67" y="63" width="10" height="26" rx="5" opacity="0.55"/>
+    <rect x="81" y="51" width="10" height="38" rx="5" opacity="0.75"/>
+    <rect x="95" y="39" width="10" height="50" rx="5"/>
+    <!-- play-треугольник: основание x = 23, вершина (55, 71) -->
+    <path d="M23 53 L55 71 L23 89 Z"/>
+  </g>
+</svg>

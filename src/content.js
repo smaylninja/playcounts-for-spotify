@@ -38,7 +38,6 @@
     enabled: true,
     placement: "cell", // 'cell' | 'subtitle'
     compact: false,
-    allPages: false,
   };
 
   /* ------------------------------------------------------------------ */
@@ -139,7 +138,6 @@
   }
 
   function pageAllowed() {
-    if (settings.allPages) return true;
     const path = currentPath();
     return ALBUM_LIKE_RE.test(path) || LIKED_RE.test(path);
   }

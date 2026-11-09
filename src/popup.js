@@ -8,7 +8,6 @@ const DEFAULTS = {
   enabled: true,
   placement: "cell",
   compact: false,
-  allPages: false,
 };
 
 const PLACEMENTS = ["cell", "subtitle"];
@@ -17,7 +16,6 @@ const ui = {
   version: document.getElementById("version"),
   enabled: document.getElementById("enabled"),
   compact: document.getElementById("compact"),
-  allPages: document.getElementById("allPages"),
   stats: document.getElementById("stats"),
   hint: document.getElementById("hint"),
 };
@@ -36,7 +34,6 @@ let pollTimer = 0;
 function paint() {
   ui.enabled.checked = settings.enabled;
   ui.compact.checked = settings.compact;
-  ui.allPages.checked = settings.allPages;
   for (let i = 0; i < radios.length; i += 1) {
     radios[i].checked = radios[i].value === settings.placement;
   }
@@ -57,7 +54,6 @@ function readForm() {
     enabled: ui.enabled.checked,
     placement,
     compact: ui.compact.checked,
-    allPages: ui.allPages.checked,
   };
 }
 
@@ -129,11 +125,6 @@ function renderStats(stats) {
 
   if (!stats.enabled) {
     ui.hint.textContent = "Расширение выключено — включите переключатель выше.";
-    return;
-  }
-  if (!stats.pageAllowed) {
-    ui.hint.textContent =
-      "На этой странице число не показывается. Включите «И на других страницах Spotify» или откройте альбом/плейлист.";
     return;
   }
   if (stats.withId === 0) {

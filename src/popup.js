@@ -11,7 +11,7 @@ const DEFAULTS = {
   allPages: false,
 };
 
-const PLACEMENTS = ["cell", "subtitle", "after-title"];
+const PLACEMENTS = ["cell", "subtitle"];
 
 const ui = {
   version: document.getElementById("version"),

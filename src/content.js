@@ -36,7 +36,7 @@
 
   const DEFAULTS = {
     enabled: true,
-    placement: "cell", // 'cell' | 'subtitle' | 'after-title'
+    placement: "cell", // 'cell' | 'subtitle'
     compact: false,
     allPages: false,
   };
@@ -188,16 +188,6 @@
     if (mode === "subtitle") {
       const subtitle = subtitleLine(row, title);
       if (subtitle) return { el: subtitle, kind: "append" };
-    }
-
-    // The title usually lives in a text column, which itself sits in the
-    // title cell (image + column). Appending to the cell keeps the badge on
-    // the same line as the title, and the title text is what shrinks.
-    const column = title.parentElement;
-    const cell = column && column !== row ? column.parentElement : null;
-
-    if (mode !== "after-title" && cell && cell !== row && row.contains(cell)) {
-      return { el: cell, kind: "append" };
     }
 
     return { el: title, kind: "after" };

@@ -57,8 +57,3 @@
   background: none;
   color: #ffffff;
 }
-
-/* Directly after the track title. */
-.slc-badge--after-title {
-  margin-left: 8px;
-}

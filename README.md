@@ -1,133 +1,37 @@
 # Spotify Play Counts
 
-Расширение для Chrome, которое показывает **число прослушиваний каждого трека** в
-веб-версии Spotify — не только в топ-10 на странице исполнителя, но и в плейлистах,
-альбомах и «Мне нравится».
+A Chrome extension that shows **the play count of every track** in the Spotify web
+player — not just in the artist's top 10, but also in playlists, albums, and Liked
+Songs.
 
-## Зачем это нужно
+## ⚡Features
 
-Spotify присылает `playcount` для треков вместе с ответом GraphQL
-(`https://api-partner.spotify.com/pathfinder/v2/query`), но рисует это число только
-в блоке популярных треков исполнителя. Расширение перехватывает те же ответы,
-запоминает пары «трек → прослушивания» и дописывает число в каждую строку списка.
+- **Toggle on and off in one click.** Play counts can be hidden and shown from the
+  popup — no uninstalling, no re-installing, no reloading the page.
+- **Two placements that fit the layout.** The number can sit as a badge to the right
+  of the track title, or be appended to the artists line under it
+  (`Artist • 1 234 567`), where it reads as part of Spotify's own metadata.
+- **Compact numbers.** Short formatting (`1.2M` instead of `1,234,567`) for when the
+  exact figure matters less than the scale.
 
-Ключевой момент: **никаких сторонних API и токенов**. Мы не делаем собственных
-запросов к Spotify — только читаем то, что браузер и так загрузил, поэтому запросы
-не отличаются от обычных, а данные не уходят никуда, кроме локального хранилища
-браузера.
+## 🛠️ Quick Start
 
-## Установка
+1. Download or clone the `playcounts-for-spotify` folder.
+2. Open `chrome://extensions/`.
+3. Turn on **Developer mode** (the toggle in the top-right corner).
+4. Click **Load unpacked** and select that folder.
+5. Open (or reload) [open.spotify.com](https://open.spotify.com) — play counts
+   appear next to the track names on album and playlist pages.
 
-1. Скачайте/склонируйте папку `spotify-listen-count`.
-2. Откройте `chrome://extensions/`.
-3. Включите **Режим разработчика** (переключатель справа сверху).
-4. Нажмите **Загрузить распакованное расширение** и выберите эту папку.
-5. Откройте (или обновите) [open.spotify.com](https://open.spotify.com) — на странице
-   альбома или плейлиста справа от названий треков появятся числа.
+After changing the extension's files, click the reload icon on the extension card in
+`chrome://extensions/` and refresh the Spotify tab.
 
-После обновления файлов расширения нажмите значок «Обновить» на карточке
-расширения в `chrome://extensions/` и перезагрузите вкладку Spotify.
+## 🔎 How It Works
 
-## Что показывается и когда
+Spotify ships `playcount` for every track inside its GraphQL responses
+(`https://api-partner.spotify.com/pathfinder/v2/query`), but renders that number only
+in the artist's popular tracks block. The extension hooks those same responses,
+remembers track → play count pairs, and appends the number to every row in the list.
 
-Spotify подгружает треки порциями по мере прокрутки, и число появляется для тех
-треков, которые приложение уже загрузило. Поэтому:
-
-- на странице альбома числа появляются сразу (альбом грузится целиком);
-- в длинном плейлисте — по мере прокрутки, строка за строкой;
-- уже увиденные треки запоминаются в `chrome.storage.local`, и при следующем
-  заходе числа видны мгновенно, ещё до ответа сети.
-
-Число выводится в альбомах, плейлистах и «Мне нравится».
-
-## Как это устроено
-
-```
-Spotify SPA (page context)                 Изолированный мир расширения
-┌───────────────────────────┐   postMessage  ┌──────────────────────────────┐
-│ src/inject.js             │ ─────────────► │ src/content.js               │
-│ hook fetch + XHR          │                │ кэш Map<trackId, playcount>  │
-│ глубокий обход JSON       │                │ chrome.storage.local         │
-│ { trackId: playcount }    │                │ MutationObserver → строки    │
-└───────────────────────────┘                └──────────────────────────────┘
-```
-
-1. **`src/inject.js`** запускается на `document_start` в мире страницы — до того,
-   как Spotify инициализирует свои модули, поэтому обёртки `window.fetch` и
-   `XMLHttpRequest.prototype.send` успевают встать первыми. Каждый ответ
-   `api-partner.spotify.com/pathfinder/*` читается через `response.clone()` (оригинал
-   остаётся нетронутым).
-
-2. Разбор ответа не привязан к конкретной операции GraphQL: рекурсивно обходится
-   весь JSON, и любой объект, у которого есть `uri` вида `spotify:track:…` и
-   числовое поле `playcount` (или `playCount`), попадает в результат. Поэтому
-   работают и `getAlbum` с `tracksV2.items[].track.playcount`, и `fetchPlaylist`,
-   и `queryArtistOverview`.
-
-3. Найденные числа пачками (раз в 250 мс) отправляются через `window.postMessage`
-   в изолированный мир, где живёт `src/content.js`. Там они складываются в `Map`
-   и периодически сохраняются в `chrome.storage.local`.
-
-4. `content.js` ищет строки по устойчивым признакам (`[data-testid="tracklist-row"]`,
-   `[role="row"]`), достаёт `trackId` из ссылки `/track/<id>` и вставляет `<span
-class="slc-badge">` с числом. `MutationObserver` перерисовывает бейджи при
-   прокрутке, смене страницы и повторном рендере React.
-
-Хешированные CSS-классы Spotify не используются намеренно: они меняются при каждом
-деплое. Всё, на что опирается расширение, — публичные `data-testid`, `role` и
-`href`.
-
-## Настройки
-
-Иконка расширения на панели Chrome открывает попап:
-
-| Настройка                    | Что делает                                                 |
-| ---------------------------- | ---------------------------------------------------------- |
-| **Показывать прослушивания** | главный выключатель                                        |
-| **Справа от названия трека** | бейдж-плашка в заголовочной ячейке (по умолчанию)          |
-| **В строке с исполнителями** | число дописывается к строке артистов: `Artist • 1 234 567` |
-| **Компактные числа**         | `1,2 млн` вместо `1 234 567`                               |
-
-Там же видна диагностика: сколько треков в кэше, сколько строк распознано,
-для скольких из них уже пришло число и в скольких нарисован бейдж.
-
-## Отладка
-
-В консоли DevTools на странице Spotify:
-
-```js
-localStorage.setItem("slc:debug", "1");
-location.reload();
-```
-
-Что должно быть видно:
-
-- `hook installed` — `inject.js` встал раньше Spotify;
-- `found N tracks in /pathfinder/v2/query` — разбор ответа сработал;
-- `sent N play counts` — данные ушли в content script;
-- `received N counts, cache size M` и `rows K | tracks K | with number K | badges K` — рендер.
-
-## Ограничения
-
-- Числа видны только для треков, которые Spotify уже загрузил (см. выше). Полная
-  предзагрузка всех страниц плейлиста потребовала бы самостоятельно повторять
-  GraphQL-запросы с токеном и хешами persisted query — это возможно, но заметно
-  более хрупко и нагружает аккаунт.
-- «Число прослушиваний» — то же, что показывает сам Spotify; он округляет и
-  обновляет его с задержкой, так что цифры могут отличаться от сторонних
-  статистических сервисов.
-- Расширение не работает в десктопном приложении и в мобильной версии.
-- Это не официальное расширение Spotify. Данные не покидают ваш компьютер.
-
-## Структура
-
-```
-manifest.json        MV3-манифест: два content script (MAIN и ISOLATED)
-src/inject.js        перехват fetch/XHR, разбор JSON, postMessage
-src/content.js       кэш, поиск строк, вставка числа, настройки, статистика
-src/content.css      стили бейджа (два варианта размещения)
-src/popup.html|css|js  попап с настройками и диагностикой
-icons/icon.svg       мастер-иконка 128×128 (исходник дизайна)
-icons/icon-small.svg упрощённый вариант под 16–32 px
-icons/icon*.png      готовые PNG, прописаны в манифесте
-```
+The key point: **no third-party APIs and no tokens**. We never send requests to
+Spotify ourselves — we only read what the browser has already loaded.

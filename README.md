@@ -1,4 +1,6 @@
-# 💚▶️ Spotify Play Counts
+<p align="center"> 
+   <img src="icons/spotify-play-counts.svg" width="260" height="64" align="middle" alt="">
+</p>
 
 A Chrome extension that shows **the play count of every track** in the Spotify web
 player — not just in the artist's top 10, but also in playlists, albums, and Liked

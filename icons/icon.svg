@@ -1,20 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Play Counts for Spotify">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#1e1e1e"/>
-      <stop offset="1" stop-color="#080808"/>
-    </linearGradient>
-  </defs>
-
-  <!-- фон: скруглённый квадрат, r = 28 (на 16 px это 3.5) -->
-  <rect width="128" height="128" rx="28" fill="url(#bg)"/>
-
-  <!-- глиф: три растущих столбика, общий низ на y = 89 -->
-  <g fill="#1db954">
-    <rect x="67" y="63" width="10" height="26" rx="5" opacity="0.55"/>
-    <rect x="81" y="51" width="10" height="38" rx="5" opacity="0.75"/>
-    <rect x="95" y="39" width="10" height="50" rx="5"/>
-    <!-- play-треугольник: основание x = 23, вершина (55, 71) -->
-    <path d="M23 53 L55 71 L23 89 Z"/>
-  </g>
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M28 4H100C113.25 4 124 14.75 124 28V100C124 113.25 113.25 124 100 124H28C14.75 124 4 113.25 4 100V28C4 14.75 14.75 4 28 4Z" fill="#191919"/>
+<path d="M36 22.0608L108.666 63.5033L36.0694 105.067L36 22.0608Z" fill="#1ED760"/>
+<path d="M61 84H103C108.52 84 113 88.48 113 94V104C113 109.52 108.52 114 103 114H61C55.48 114 51 109.52 51 104V94C51 88.48 55.48 84 61 84Z" fill="#F5F2E8"/>
+<path d="M61 95L66 92V106M66 106H61M66 106H71" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" stroke="#191919"/>
+<path d="M77 95C77 91 86 91 86 95C86 98 80 101 77 106H87" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" stroke="#191919"/>
+<path d="M94 93C98 91 103 92 103 96C103 98 101 99 98 99C101 99 103 100 103 103C103 107 98 108 94 105" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" stroke="#191919"/>
 </svg>

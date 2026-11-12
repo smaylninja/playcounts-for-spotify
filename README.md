@@ -1,5 +1,5 @@
 <p align="center"> 
-   <img src="icons/spotify-play-counts.svg" width="520" height="128" align="middle" alt="">
+   <img src="icons/spotify-play-counts.svg" width="390" height="96" align="middle" alt="">
 </p>
 
 A Chrome extension that shows **the play count of every track** in the Spotify web
